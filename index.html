@@ -201,6 +201,7 @@
                     await copiarConClipboard(texto);
 
                     estado.textContent = "¡Código copiado! ✅";
+                    comenzarCuentaAtras(3);
 
                 } catch (e) {
 
@@ -210,6 +211,7 @@
                         copiarConFallback(texto);
 
                         estado.textContent = "¡Código copiado! ✅";
+                        comenzarCuentaAtras(3);
 
                     } catch (e2) {
 
