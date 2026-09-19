@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=width">
+    <title>Copiando código...</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            text-align: center;
+            background: #1b2838; /* El color azul oscuro clásico de Steam */
+            color: #c7d5e0;
+            padding-top: 10vh;
+            margin: 0;
+        }
+        .container { max-width: 500px; margin: 0 auto; padding: 20px; }
+        .success { color: #66c0f4; font-size: 28px; font-weight: bold; margin-bottom: 10px; }
+        .text { color: #8f98a0; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p id="msg">Preparando copiado...</p>
+    </div>
+
+    <script>
+        // Cambia lo que está entre comillas por el código o comando real que quieres que la gente copie
+        const textoACopiar = "QoL [+PlusUltra+]:FastForward2;ArcadiaRVInterior_B42_MP;ArcadiaRVInterior_B42_Vanilla;ChuckleberryFinnAlertSystem;errorMagnifier;ContextMenuIconsCore;SimpleContextMenuIcons;manageContainers;ProximityInventory;SearchContainers;SwapIt;MoreDamagedObjects;AnimSyncSmth;VanillaVehiclesAnimated;VVA_cullseats;VVA_PikamyDelight;twistdarkermap;FurniturePushPull;BetterSortCC;TheBestLockpickingB4219;ItemCondition_KingEJ;CyesPushDoors;DetailedDescriptionsForOccupationsAndTraits;P4PickingMeister;RainCleansBlood;OpenAllContainers;P4HasBeenRead;BetterGeneratorInfo;AMMS_Standalone;Ladders42204;JB_BugsInLights;EURY_DST;NeatUI_Framework;ModernStatus;ModLoadOrderSorter_b42;ModManager;better-auto-mechanics;RealisticDash;SaucedCarts;SaucedTrolleys;RVVFX;SimpleReadWhileWalkingUpdated;SPNCC;SPNCCDetails;SPNCCDetailsHD;SPNCCFaces;SpnOpenClothBase;FH;SpnHair;SpnOpenCloth;SpnCloth;";
+
+        // Función para ejecutar la copia inmediatamente
+        function copiarAlPortapapeles() {
+            navigator.clipboard.writeText(textoACopiar).then(() => {
+                document.getElementById("msg").innerHTML = `
+                    <div class="success">¡Copiado con éxito! ✅</div>
+                    <div class="text">Ya puedes cerrar esta pestaña y volver a Steam.</div>
+                `;
+            }).catch(err => {
+                document.getElementById("msg").innerHTML = `
+                    <div style="color: #ff4d4d; font-size: 20px; font-weight:bold;">Error al copiar automáticamente ❌</div>
+                    <div class="text" style="margin-top:10px;">Tu navegador bloqueó el portapapeles. Cópialo manualmente de aquí abajo:</div>
+                    <textarea style="width:100%; height:60px; margin-top:15px; background:#101822; color:#fff; border:1px solid #3a5573; padding:5px;" readonly>${textoACopiar}</textarea>
+                `;
+            });
+        }
+
+        // Ejecutar al cargar la página
+        window.addEventListener('DOMContentLoaded', copiarAlPortapapeles);
+    </script>
+</body>
+</html>
