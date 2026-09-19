@@ -25,10 +25,24 @@
     </div>
 
     <script>
-        // 1. LEER EL CÓDIGO DESDE LA URL (?c=LO_QUE_SEA)
-        const urlParams = new URLSearchParams(window.location.search);
-        // Si no hay parámetro, por defecto pondrá un aviso
-        const textoACopiar = urlParams.get('c') || "Ningún código proporcionado";
+        // 1. LEER EL CÓDIGO EN BRUTO EVITANDO EL BUG DEL SIGNO MAS (+)
+        function obtenerCodigoDeURL() {
+            const busqueda = window.location.search;
+            if (!busqueda.includes('c=')) return "Ningún código proporcionado";
+            
+            // Dividimos la URL en el parámetro 'c=' y tomamos todo lo que va después
+            let fragmento = busqueda.split('c=')[1];
+            
+            // Si hay más parámetros separados por '&', nos quedamos solo con el primero
+            if (fragmento.includes('&')) {
+                fragmento = fragmento.split('&')[0];
+            }
+            
+            // Decodificamos los espacios (%20) pero manteniendo intactos los signos más (+)
+            return decodeURIComponent(fragmento);
+        }
+
+        const textoACopiar = obtenerCodigoDeURL();
 
         function iniciarCopiado() {
             if (textoACopiar === "Ningún código proporcionado") {
@@ -36,26 +50,25 @@
                 return;
             }
 
-            // 2. COPIAR AL PORTAPAPELES
+            // 2. COPIAR AL PORTAPAPELES (Sin pedir permisos en HTTPS)
             navigator.clipboard.writeText(textoACopiar).then(() => {
                 document.getElementById("msg").innerHTML = `
                     <div class="success">¡Copiado con éxito! ✅</div>
                     <div class="text">El código ya está listo para usar en tu juego.</div>
                     <div id="timer" class="countdown">Esta ventana intentará cerrarse en 3 segundos...</div>
                 `;
-                // Iniciar cuenta atrás para intentar cerrar
                 comenzarCuentaAtras(3);
             }).catch(err => {
-                // Si falla el portapapeles (raro), muestra cuadro de texto de emergencia
+                // Copia manual de emergencia si el navegador del usuario es muy antiguo
                 document.getElementById("msg").innerHTML = `
                     <div style="color: #ff4d4d; font-size: 20px; font-weight:bold;">Error al copiar automáticamente ❌</div>
-                    <div class="text" style="margin-top:10px;">Cópialo manualmente de aquí abajo:</div>
+                    <div class="text" style="margin-top:10px;">Por favor, cópialo manualmente de aquí abajo:</div>
                     <textarea style="width:100%; height:60px; margin-top:15px; background:#101822; color:#fff; border:1px solid #3a5573; padding:5px; font-family:monospace;" readonly>${textoACopiar}</textarea>
                 `;
             });
         }
 
-        // 3. CUENTA ATRÁS Y INTENTO DE CIERRE
+        // 3. CUENTA ATRÁS PARA VOLVER A STEAM
         function comenzarCuentaAtras(segundos) {
             let tiempo = segundos;
             const intervalo = setInterval(() => {
@@ -63,8 +76,6 @@
                 if (tiempo <= 0) {
                     clearInterval(intervalo);
                     document.getElementById("timer").innerHTML = "Ya puedes cerrar esta pestaña y volver a Steam.";
-                    
-                    // Intento de cierre de pestaña
                     window.close(); 
                 } else {
                     document.getElementById("timer").innerHTML = `Esta ventana intentará cerrarse en ${tiempo} segundos...`;
@@ -72,7 +83,6 @@
             }, 1000);
         }
 
-        // Ejecutar todo cuando la web cargue
         window.addEventListener('DOMContentLoaded', iniciarCopiado);
     </script>
 </body>
